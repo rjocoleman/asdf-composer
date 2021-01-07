@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Register Composer's home vendor binaries.
+echo "bin .composer/vendor/bin"

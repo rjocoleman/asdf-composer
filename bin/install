@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+install_composer() {
+  local version=$1
+  local bin_path=$2/bin
+
+  mkdir -p "${bin_path}"
+
+  local expected_signature="$(curl -sL https://composer.github.io/installer.sig)"
+
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  php -r "if (hash_file('sha384', 'composer-setup.php') === '${expected_signature}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+  php composer-setup.php --install-dir=$bin_path --filename=composer --version $version
+  php -r "unlink('composer-setup.php');"
+}
+
+install_composer $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
